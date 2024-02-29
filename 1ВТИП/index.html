@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Модальное окно</title>
+    <style>
+      #modal,
+      #finalModal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4);
+      }
+      #modal-content,
+      #finalModal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+      }
+      .close,
+      .finalClose {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+      }
+      .close:hover,
+      .close:focus,
+      .finalClose:hover,
+      .finalClose:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="toggle">Начать</button>
+
+    <div id="modal">
+      <div id="modal-content">
+        <span class="close">×</span>
+        <iframe
+          width="560"
+          height="315"
+          src="https://www.youtube.com/embed/3gXxCIl63pE?si=W1nZyG8Ss-yiSzdN"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </div>
+
+    <div id="finalModal">
+      <div id="finalModal-content">
+        <span class="finalClose">×</span>
+        <p>Показ завершён</p>
+      </div>
+    </div>
+
+    <script>
+      var modal = document.getElementById("modal");
+      var finalModal = document.getElementById("finalModal");
+      var close = document.getElementsByClassName("close")[0];
+      var finalClose = document.getElementsByClassName("finalClose")[0];
+      var toggle = document.getElementById("toggle");
+      var count = 0;
+      var interval;
+
+      function showModal() {
+        if (count < 3) {
+          modal.style.display = "block";
+          count++;
+        } else {
+          clearInterval(interval);
+          toggle.innerHTML = "Начать";
+          finalModal.style.display = "block";
+        }
+      }
+
+      close.onclick = function () {
+        modal.style.display = "none";
+        interval = setTimeout(showModal, 5000);
+      };
+
+      finalClose.onclick = function () {
+        finalModal.style.display = "none";
+      };
+
+      toggle.onclick = function () {
+        if (toggle.innerHTML === "Начать") {
+          count = 0;
+          interval = setTimeout(showModal, 5000); // Установите интервал здесь
+          toggle.innerHTML = "Остановить";
+        } else {
+          clearInterval(interval);
+          modal.style.display = "none";
+          finalModal.style.display = "none";
+          toggle.innerHTML = "Начать";
+        }
+      };
+    </script>
+  </body>
+</html>

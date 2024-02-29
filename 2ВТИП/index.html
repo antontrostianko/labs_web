@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
+	<title>Document</title>
+</head>
+<body>
+	<div id="container"></div>
+	<div>
+  		<button id="clear-btn">Очистить форму</button>
+  		<button id="delete-btn">Удалить запись</button>
+  		<button id="show-all-btn">Показать все данные</button>
+  		<button id="show-id-btn">Показать элемент с ID</button>
+		<button id="return-btn">Вернуться к вводу данных</button>
+	</div>
+	<script id="form-template" type="text/x-handlebars-template">
+	<form id="car-form">
+		<div>
+		<label for="id">ID:</label>
+		<input type="text" id="id" name="id" required>
+		</div>
+		<div>
+		<label for="series">Серия:</label>
+		<input type="text" id="series" name="series" required>
+		</div>
+		<div>
+		<label for="date">Дата выпуска:</label>
+		<input type="date" id="date" name="date" required>
+		</div>
+		<div>
+		<label for="purpose">Назначение:</label>
+		<select id="purpose" name="purpose" required>
+			<option value="Легковой">Легковой</option>
+			<option value="Грузовой">Грузовой</option>
+			<option value="Специальный">Специальный</option>
+		</select>
+		</div>
+		<div>
+		<label for="address">Адрес производителя:</label>
+		<input type="text" id="address" name="address" required>
+		</div>
+		<div>
+		<button type="submit">Отправить</button>
+		</div>
+	</form>
+	</script>
+
+	<script id="info-template" type="text/x-handlebars-template">
+	<div id="car-info">
+		<h3>Информация об автомобиле</h3>
+		<ul>
+		<li>ID: {{id}}</li>
+		<li>Серия: {{series}}</li>
+		<li>Дата выпуска: {{date}}</li>
+		<li>Назначение: {{purpose}}</li>
+		<li>Адрес производителя: {{address}}</li>
+		</ul>
+	</div>
+	</script>
+
+	<script src="script.js"></script>
+</body>
+</html>
