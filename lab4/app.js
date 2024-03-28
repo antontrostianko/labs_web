@@ -3,15 +3,10 @@ const fs = require("fs");
 const path = require("path");
 
 const app = express();
-const port = 3000;
+const port = 3001;
 
 // Middleware для парсинга тела запроса
 app.use(express.urlencoded({ extended: true }));
-
-// Функция для записи массива фамилий в файл
-function writeToFile(data, filename) {
-  fs.writeFileSync(filename, data.join(", "), "utf8");
-}
 
 // Функция для преобразования и сортировки массива фамилий
 function transformAndSort(data) {
@@ -26,10 +21,14 @@ app.get("/", (req, res) => {
 
 app.post("/submit", (req, res) => {
   const namesArray = req.body.names.split(",").map((name) => name.trim());
-  writeToFile(namesArray, "names.txt");
+  fs.writeFileSync("names.txt", namesArray.join(", "), "utf8");
 
   const transformedNamesArray = transformAndSort(namesArray);
-  writeToFile(transformedNamesArray, "transformed_names.txt");
+  fs.writeFileSync(
+    "transformed_names.txt",
+    transformedNamesArray.join(", "),
+    "utf8"
+  );
 
   res.redirect("/result");
 });
