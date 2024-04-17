@@ -23,12 +23,12 @@
       <br />
       <label for="faculty">Факультет</label>
       <input type="text" name="faculty" id="faculty" />
-      <button id="btn">Заполнить поля из файла</button><button></button
+      <button id="btn">Заполнить поля из файла</button><button id="btn2">Новая страница</button
       ><button>Очистить форму</button>
     </form>
   </body>
   <script>
-    const susunction = async (e) => {
+    const f = async (e) => {
       e.preventDefault();
       e.stopPropagation();
 
@@ -49,6 +49,12 @@
       .catch(error => console.error('Error fetching data:', error));
     };
 
-    document.getElementById("btn").addEventListener("click", susunction);
+    document.getElementById("btn").addEventListener("click", f);
+
+
+    document.getElementById('btn2').addEventListener('click', () => {
+        window.open("new_page",'_blank')
+    });
+    
   </script>
 </html>

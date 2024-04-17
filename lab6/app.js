@@ -6,13 +6,16 @@ const app = express();
 const PORT = 3000;
 const path = require("path");
 
+app.use(express.json());
+
 app.get("/", async (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
+app.get("/new_page", async (req, res) => {
+  res.sendFile(path.join(__dirname, "new_page.html"));
+});
 
-app.use(express.json());
 
-// Обработчик GET-запроса на /info
 app.get("/info", async (req, res) => {
   try {
     // Чтение содержимого файла info.json
