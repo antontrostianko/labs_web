@@ -32,21 +32,21 @@
       e.preventDefault();
       e.stopPropagation();
 
-      const res = await fetch("/info", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-
-      console.log(res.body);
-
-      //   const parsedInfo = JSON.parse(res.body.info);
-
-      //   console.log(parsedInfo);
-      //   const keys = parsedInfo.keys();
-
-      //   keys.forEach((key) => {
-      //     document.getElementById(key).value = parsedInfo[key];
-      //   });
+      fetch('/info')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        return response.json();
+      })
+      .then(data => {
+        const info = data.info || {}; // Проверка наличия объекта "info" в JSON
+        document.getElementById('gender').value = info.gender || '';
+        document.getElementById('group').value = info.group || '';
+        document.getElementById('faculty').value = info.faculty || '';
+        document.getElementById('name').value = info.name || '';
+      })
+      .catch(error => console.error('Error fetching data:', error));
     };
 
     document.getElementById("btn").addEventListener("click", susunction);
