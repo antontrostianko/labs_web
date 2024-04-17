@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    * {
+      margin-bottom: 10px;
+    }
+  </style>
+  <body>
+    <form>
+      <label for="name">Имя</label>
+      <input type="text" name="name" id="name" />
+      <br />
+      <label for="gender">Пол</label>
+      <input type="text" name="gender" id="gender" />
+      <br />
+      <label for="group">Группа</label>
+      <input type="text" name="group" id="group" />
+      <br />
+      <label for="faculty">Факультет</label>
+      <input type="text" name="faculty" id="faculty" />
+      <button id="btn">Заполнить поля из файла</button><button></button
+      ><button>Очистить форму</button>
+    </form>
+  </body>
+  <script>
+    const susunction = async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const res = await fetch("/info", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      console.log(res.body);
+
+      //   const parsedInfo = JSON.parse(res.body.info);
+
+      //   console.log(parsedInfo);
+      //   const keys = parsedInfo.keys();
+
+      //   keys.forEach((key) => {
+      //     document.getElementById(key).value = parsedInfo[key];
+      //   });
+    };
+
+    document.getElementById("btn").addEventListener("click", susunction);
+  </script>
+</html>

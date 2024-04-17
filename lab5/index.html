@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Employee Management</title>
+    <style>
+      /* Стили для простоты демонстрации */
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+      }
+      button {
+        margin: 5px;
+        padding: 10px;
+        cursor: pointer;
+      }
+      input {
+        margin: 5px;
+        padding: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Employee Management</h1>
+
+    <label for="name">ФИО:</label>
+    <input type="text" id="name" />
+    <label for="position">Должность:</label>
+    <input type="text" id="position" />
+    <label for="salary">Зарплата:</label>
+    <input type="number" id="salary" />
+    <label for="idn">IDN:</label>
+    <input type="text" id="idn" />
+    <select name="methods" id="methods">
+      <option value="" disabled selected>Выберите фильтр</option>
+      <option value="$gte">>=</option>
+      <option value="$lte"><=</option>
+      <option value="$gt">></option>
+      <option value="$lt"><</option>
+    </select>
+
+    <!-- Кнопки для выполнения операций и очистки полей -->
+    <button onclick="createEmployee()">Создать нового сотрудника</button>
+    <button onclick="updateEmployee()">Изменить сотрудника</button>
+    <button onclick="deleteEmployee()">Удалить сотрудника</button>
+    <button onclick="clearFields()">Очистить поля</button>
+    <button onclick="getAllEmployees()">Вывести всех сотрудников</button>
+    <button onclick="filterEmployees()">Вывести всех с ЗП</button>
+
+    <!-- Контейнер для отображения всех записей -->
+    <div id="allEmployees"></div>
+    <!-- Сообщение об успехе или ошибке -->
+    <div id="message"></div>
+
+    <script>
+      // Функция для выполнения операции создания сотрудника
+      function createEmployee() {
+        // Данные сотрудника из полей ввода
+        const employee = {
+          name: document.getElementById("name").value,
+          position: document.getElementById("position").value,
+          salary: parseFloat(document.getElementById("salary").value),
+          idn: document.getElementById("idn").value,
+        };
+
+        // Отправка данных на сервер
+        fetch("/api/employees", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(employee),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById("message").innerText =
+              "Сотрудник успешно создан!";
+          })
+          .catch((error) => {
+            console.error("Ошибка при создании сотрудника:", error);
+            document.getElementById("message").innerText =
+              "Ошибка при создании сотрудника.";
+          });
+      }
+
+      // Функция для выполнения операции изменения сотрудника
+      function updateEmployee() {
+        const idn = document.getElementById("idn").value;
+        // Данные для отправки на сервер
+        const newData = {
+          name: document.getElementById("name").value,
+          position: document.getElementById("position").value,
+          salary: parseFloat(document.getElementById("salary").value),
+        };
+
+        // Отправка данных на сервер
+        fetch(`/api/employees/${idn}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newData),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById("message").innerText =
+              "Сотрудник успешно изменен!";
+          })
+          .catch((error) => {
+            console.error("Ошибка при изменении сотрудника:", error);
+            document.getElementById("message").innerText =
+              "Ошибка при изменении сотрудника.";
+          });
+      }
+
+      // Функция для выполнения операции удаления сотрудника
+      function deleteEmployee() {
+        const idn = document.getElementById("idn").value;
+
+        // Отправка запроса на сервер для удаления сотрудника
+        fetch(`/api/employees/${idn}`, {
+          method: "DELETE",
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById("message").innerText =
+              "Сотрудник успешно удален!";
+          })
+          .catch((error) => {
+            console.error("Ошибка при удалении сотрудника:", error);
+            document.getElementById("message").innerText =
+              "Ошибка при удалении сотрудника.";
+          });
+      }
+
+      // Функция для очистки всех полей ввода
+      function clearFields() {
+        document.getElementById("name").value = "";
+        document.getElementById("position").value = "";
+        document.getElementById("salary").value = "";
+        document.getElementById("idn").value = "";
+        document.getElementById("message").innerText = "";
+        document.getElementById("allEmployees").innerHTML = "";
+      }
+
+      async function getAllEmployees() {
+        const allEmployeesContainer = document.getElementById("allEmployees");
+
+        try {
+          // Отправляем запрос на сервер для получения всех записей из таблицы
+          const response = await fetch("/api/employees");
+          const employees = await response.json();
+
+          // Очищаем контейнер перед добавлением новых записей
+          allEmployeesContainer.innerHTML = "";
+
+          // Добавляем каждую запись в контейнер
+          employees.forEach((employee) => {
+            const employeeItem = document.createElement("div");
+            employeeItem.textContent = `Name: ${employee.name}, Position: ${employee.position}, Salary: ${employee.salary}, IDN: ${employee.idn}`;
+            allEmployeesContainer.appendChild(employeeItem);
+          });
+        } catch (error) {
+          console.error("Error fetching employees:", error);
+        }
+      }
+
+      async function filterEmployees() {
+        const allEmployeesContainer = document.getElementById("allEmployees");
+        const salary = document.getElementById("salary").value;
+        const method = document.getElementById("methods").value;
+
+        try {
+          // Отправляем запрос на сервер для получения всех записей из таблицы
+          const response = await fetch(`/api/employees/${method}/${salary}`);
+          const employees = await response.json();
+
+          // Очищаем контейнер перед добавлением новых записей
+          allEmployeesContainer.innerHTML = "";
+
+          // Добавляем каждую запись в контейнер
+          employees.forEach((employee) => {
+            const employeeItem = document.createElement("div");
+            employeeItem.textContent = `Name: ${employee.name}, Position: ${employee.position}, Salary: ${employee.salary}, IDN: ${employee.idn}`;
+            allEmployeesContainer.appendChild(employeeItem);
+          });
+        } catch (error) {
+          console.error("Error fetching employees:", error);
+        }
+      }
+    </script>
+  </body>
+</html>
